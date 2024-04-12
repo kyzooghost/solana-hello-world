@@ -1,7 +1,10 @@
 // Struct for data field of PDA
 
 use borsh::{BorshSerialize, BorshDeserialize};
-use solana_program::program_error::ProgramError;
+use solana_program::{
+    program_error::ProgramError,
+    program_pack::{IsInitialized, Sealed}
+};
 
 #[derive(BorshSerialize, BorshDeserialize)]
 pub struct IntroAccountState {
@@ -18,5 +21,13 @@ impl IntroAccountState {
             Ok(result) => Ok(result),
             Err(_) => Err(ProgramError::InvalidInstructionData)
         }
+    }
+}
+
+impl Sealed for IntroAccountState {}
+
+impl IsInitialized for IntroAccountState {
+    fn is_initialized(&self) -> bool {
+        self.is_initialized
     }
 }

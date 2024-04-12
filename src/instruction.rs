@@ -7,6 +7,10 @@ pub enum IntroInstruction {
     AddIntro {
         name: String,
         message: String,
+    },
+    UpdateIntro {
+        name: String,
+        message: String,
     }
 }
 
@@ -22,6 +26,10 @@ impl IntroInstruction {
         let payload = IntroPayload::try_from_slice(rest).unwrap();
         Ok(match variant {
             0 => Self::AddIntro {
+                name: payload.name,
+                message: payload.message
+            },
+            1 => Self::UpdateIntro {
                 name: payload.name,
                 message: payload.message
             },

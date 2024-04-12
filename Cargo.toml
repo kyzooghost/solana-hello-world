@@ -9,6 +9,7 @@ edition = "2021"
 borsh = { version = "=0.9.1" }
 solana-program = "1.14.8"
 ahash = "=0.8.6"
+thiserror = "1.0.58"
 
 [features]
 no-entrypoint = []
