@@ -5,7 +5,7 @@ use solana_program::{
     account_info::{next_account_info, AccountInfo},
     system_instruction,
     sysvar::{rent::Rent, Sysvar},
-    program::invoke_signed,
+    program::{invoke, invoke_signed},
     program_error::ProgramError,
     program_pack::IsInitialized,
     borsh0_10::try_from_slice_unchecked,
@@ -148,12 +148,25 @@ pub fn add_reply(
     counter_data.serialize(&mut &mut pda_counter.data.borrow_mut()[..])?;
     msg!("Counter updated to {}!", counter_data.counter);
 
-
     // Mint tokens
 
-    // if is_account_initialized(user_ata) == false {
-    //     let instruction = create_associated_token_account(replier.key, replier.key, token_mint.key);
-    // }
+    if is_account_initialized(user_ata) == false {
+        msg!("ATA not created, creating...")
+        let instruction = create_associated_token_account(replier.key, replier.key, token_mint.key);
+        // https://docs.rs/spl-associated-token-account/latest/spl_associated_token_account/fn.create_associated_token_account.html
+        invoke(
+            instruction,
+            &[
+                initializer.clone(), 
+                user_ata.clone(),
+                initializer.clone(), 
+                token_mint.clone(),
+                system_program.clone(),
+                token_program.clone()()
+            ]
+        );
+        msg!("Created user ATA");
+    }
 
     msg!("Minting 5 tokens to User associated token account");
     invoke_signed(
