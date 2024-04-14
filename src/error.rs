@@ -11,11 +11,11 @@ pub enum IntroError{
     #[error("PDA derived does not equal PDA passed in")]
     InvalidPDA,
     // Error 2
+    #[error("Incorrect account entered")]
+    IncorrectAccountError,
+    // Error 3
     #[error("Input data exceeds max length")]
     InvalidDataLength,
-    // Error 3
-    #[error("Rating greater than 5 or less than 1")]
-    InvalidRating,
 }
 
 impl From<IntroError> for ProgramError {

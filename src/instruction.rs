@@ -14,7 +14,8 @@ pub enum IntroInstruction {
     },
     AddReply {
         reply: String
-    }
+    },
+    InitializeMint
 }
 
 #[derive(BorshDeserialize)]
@@ -52,6 +53,7 @@ impl IntroInstruction {
                     reply: payload.reply                
                 }
             },
+            3 => Self::InitializeMint,
             _ => return Err(ProgramError::InvalidInstructionData)
         })
     }

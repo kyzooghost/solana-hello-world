@@ -8,10 +8,12 @@ use crate::instruction::IntroInstruction;
 mod add_intro;
 mod update_intro;
 mod add_reply;
+mod initialize_token_mint;
 
 use add_intro::add_intro;
 use update_intro::update_intro;
 use add_reply::add_reply;
+use initialize_token_mint::initialize_token_mint;
 
 pub fn process_instruction(
     program_id: &Pubkey,
@@ -29,5 +31,8 @@ pub fn process_instruction(
         IntroInstruction::AddReply { reply } => {
             add_reply(program_id, accounts, reply)
         },
+        IntroInstruction::InitializeMint => {
+            initialize_token_mint(program_id, accounts)
+        }
     }
 }

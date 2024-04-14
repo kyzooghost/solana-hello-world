@@ -11,8 +11,6 @@ use borsh::BorshSerialize;
 use crate::state::IntroAccountState;
 use crate::error::IntroError;
 
-
-
 pub fn update_intro(
     program_id: &Pubkey,
     accounts: &[AccountInfo],
