@@ -159,12 +159,10 @@ pub fn add_reply(
             &instruction,
             &[
                 replier.clone(),
-                replier.clone(),
                 user_ata.clone(),
                 token_mint.clone(),
-                token_program.clone(),
                 system_program.clone(),
-                associated_token_program.clone(),
+                token_program.clone(),
             ]
         )?;
         msg!("Created user ATA");

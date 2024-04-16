@@ -211,23 +211,10 @@ pub fn add_intro(
                 &instruction,
                 &[
                     initializer.clone(),
-                    initializer.clone(),
                     user_ata.clone(),
                     token_mint.clone(),
-                    token_program.clone(),
                     system_program.clone(),
-                    associated_token_program.clone(),
-
-
-                    // initializer.clone(), 
-                    // user_ata.clone(),
-                    // initializer.clone(), 
-                    // token_mint.clone(),
-                    // system_program.clone(),
-                    // token_program.clone(),
-                    // sysvar_rent.clone(),
-                    // associated_token_program.clone(),
-
+                    token_program.clone(),
                 ]
             )?;
             msg!("Created user ATA");
