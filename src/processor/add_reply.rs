@@ -11,7 +11,7 @@ use solana_program::{
     borsh0_10::try_from_slice_unchecked,
     native_token::LAMPORTS_PER_SOL,
 };
-use spl_associated_token_account::{create_associated_token_account, get_associated_token_address};
+use spl_associated_token_account::{instruction::create_associated_token_account, get_associated_token_address};
 use spl_token::ID as TOKEN_PROGRAM_ID;
 use std::convert::TryInto;
 use borsh::BorshSerialize;
