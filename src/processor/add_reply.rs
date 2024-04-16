@@ -151,20 +151,20 @@ pub fn add_reply(
     // Mint tokens
 
     if is_account_initialized(user_ata) == false {
-        msg!("ATA not created, creating...")
+        msg!("ATA not created, creating...");
         let instruction = create_associated_token_account(replier.key, replier.key, token_mint.key);
         // https://docs.rs/spl-associated-token-account/latest/spl_associated_token_account/fn.create_associated_token_account.html
         invoke(
-            instruction,
+            &instruction,
             &[
-                initializer.clone(), 
+                replier.clone(), 
                 user_ata.clone(),
-                initializer.clone(), 
+                replier.clone(), 
                 token_mint.clone(),
                 system_program.clone(),
-                token_program.clone()()
+                token_program.clone()
             ]
-        );
+        )?;
         msg!("Created user ATA");
     }
 

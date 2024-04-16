@@ -5,18 +5,19 @@ use solana_program::{
     account_info::{next_account_info, AccountInfo},
     system_instruction,
     sysvar::{rent::Rent, Sysvar},
-    program::invoke_signed,
+    program::{invoke, invoke_signed},
     program_error::ProgramError,
     program_pack::IsInitialized,
     borsh0_10::try_from_slice_unchecked,
     native_token::LAMPORTS_PER_SOL
 };
-use spl_associated_token_account::get_associated_token_address;
+use spl_associated_token_account::{create_associated_token_account, get_associated_token_address};
 use spl_token::ID as TOKEN_PROGRAM_ID;
 use std::convert::TryInto;
 use borsh::BorshSerialize;
 use crate::state::{IntroAccountState, IntroReplyCounter};
 use crate::error::IntroError;
+use crate::utils::is_account_initialized::is_account_initialized;
 
 pub fn add_intro(
     program_id: &Pubkey,
@@ -201,20 +202,20 @@ pub fn add_intro(
     /*** MINT TOKENS TO INITIALIZER ***/
     {
         if is_account_initialized(user_ata) == false {
-            msg!("ATA not created, creating...")
-            let instruction = create_associated_token_account(replier.key, replier.key, token_mint.key);
+            msg!("ATA not created, creating...");
+            let instruction = create_associated_token_account(initializer.key, initializer.key, token_mint.key);
             // https://docs.rs/spl-associated-token-account/latest/spl_associated_token_account/fn.create_associated_token_account.html
             invoke(
-                instruction,
+                &instruction,
                 &[
-                    replier.clone(), 
+                    initializer.clone(), 
                     user_ata.clone(),
-                    replier.clone(), 
+                    initializer.clone(), 
                     token_mint.clone(),
                     system_program.clone(),
                     token_program.clone()
                 ]
-            );
+            )?;
             msg!("Created user ATA");
         }    
 
