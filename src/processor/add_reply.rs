@@ -40,6 +40,7 @@ pub fn add_reply(
     let user_ata = next_account_info(account_info_iter)?;
     let system_program = next_account_info(account_info_iter)?;
     let token_program = next_account_info(account_info_iter)?;
+    let associated_token_program = next_account_info(account_info_iter)?;
 
     // Check that `replier` is signer
     if !replier.is_signer {
@@ -98,7 +99,7 @@ pub fn add_reply(
 
     // Validate pda_reply is expected
     if pda != *pda_reply.key {
-        msg!("Invalid seeds for PDA");
+        msg!("Invalid seeds for Reply PDA");
         return Err(IntroError::InvalidPDA.into())
     }
 
@@ -152,17 +153,18 @@ pub fn add_reply(
 
     if is_account_initialized(user_ata) == false {
         msg!("ATA not created, creating...");
-        let instruction = create_associated_token_account(replier.key, replier.key, token_mint.key);
+        let instruction = create_associated_token_account(replier.key, replier.key, token_mint.key, token_program.key);
         // https://docs.rs/spl-associated-token-account/latest/spl_associated_token_account/fn.create_associated_token_account.html
         invoke(
             &instruction,
             &[
-                replier.clone(), 
+                replier.clone(),
+                replier.clone(),
                 user_ata.clone(),
-                replier.clone(), 
                 token_mint.clone(),
+                token_program.clone(),
                 system_program.clone(),
-                token_program.clone()
+                associated_token_program.clone(),
             ]
         )?;
         msg!("Created user ATA");

@@ -41,6 +41,7 @@ pub fn add_intro(
     let user_ata = next_account_info(account_info_iter)?;
     let system_program = next_account_info(account_info_iter)?;
     let token_program = next_account_info(account_info_iter)?;
+    let associated_token_program = next_account_info(account_info_iter)?;
 
     // Check that `initializer` is signer
     // No msg.sender global variable available in Solana, and fee-payer is not available here either
@@ -203,24 +204,34 @@ pub fn add_intro(
     {
         if is_account_initialized(user_ata) == false {
             msg!("ATA not created, creating...");
-            let instruction = create_associated_token_account(initializer.key, initializer.key, token_mint.key);
+            let instruction = create_associated_token_account(initializer.key, initializer.key, token_mint.key, token_program.key);
             // https://docs.rs/spl-associated-token-account/latest/spl_associated_token_account/fn.create_associated_token_account.html
+            // Sigh wtf, finally found the correct arguments here - https://solana.stackexchange.com/questions/11943/create-ata-from-program-for-a-pda
             invoke(
                 &instruction,
                 &[
-                    initializer.clone(), 
+                    initializer.clone(),
+                    initializer.clone(),
                     user_ata.clone(),
-                    initializer.clone(), 
                     token_mint.clone(),
+                    token_program.clone(),
                     system_program.clone(),
-                    token_program.clone()
+                    associated_token_program.clone(),
+
+
+                    // initializer.clone(), 
+                    // user_ata.clone(),
+                    // initializer.clone(), 
+                    // token_mint.clone(),
+                    // system_program.clone(),
+                    // token_program.clone(),
+                    // sysvar_rent.clone(),
+                    // associated_token_program.clone(),
+
                 ]
             )?;
             msg!("Created user ATA");
-        }    
-
-
-
+        }
 
         msg!("Minting 10 tokens to User associated token account");
         invoke_signed(
