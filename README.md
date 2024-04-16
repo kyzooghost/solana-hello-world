@@ -5,5 +5,3 @@ https://solana.com/developers/guides/getstarted/local-rust-hello-world
 
 # Deploy Solana bytecode
 `solana program deploy ./target/deploy/solana_hello_world.so`
-
- 
